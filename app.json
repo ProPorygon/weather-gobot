@@ -1,0 +1,8 @@
+{
+  "name": "weather-gobot",
+  "description": "Groupme Weather App in Go",
+  "image": "heroku/go:1.7",
+  "mount_dir": "src/github.com/ProPorygon/weather-gobot",
+  "website": "https://github.com/ProPorygon/weather-gobot",
+  "repository": "https://github.com/ProPorygon/weather-gobot"
+}
