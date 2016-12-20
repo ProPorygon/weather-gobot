@@ -11,12 +11,14 @@ import (
 func handler(w http.ResponseWriter, r *http.Request) {
 	var responseData map[string]interface{}
 	json.NewDecoder(r.Body).Decode(responseData)
-	jsonMap := map[string]string{"bot_id": os.Getenv("BOT_ID"), "text": "Hello"}
-	jsonVal, _ := json.Marshal(jsonMap)
-	_, err := http.Post("https://api.groupme.com/v3/bots/post",
-		"application/json", bytes.NewReader(jsonVal))
-	if err != nil {
-		log.Printf("%v", err.Error())
+	if responseData["text"] == "weatherbot" {
+		jsonMap := map[string]string{"bot_id": os.Getenv("BOT_ID"), "text": "Hello"}
+		jsonVal, _ := json.Marshal(jsonMap)
+		_, err := http.Post("https://api.groupme.com/v3/bots/post",
+			"application/json", bytes.NewReader(jsonVal))
+		if err != nil {
+			log.Printf("%v", err.Error())
+		}
 	}
 }
 
