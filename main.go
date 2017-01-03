@@ -80,7 +80,7 @@ func postToChat(message string) {
 func handler(w http.ResponseWriter, r *http.Request) {
 	var responseData CallbackMessage
 	json.NewDecoder(r.Body).Decode(&responseData)
-	chatMessage := strings.Split(responseData.Text, " ")
+	chatMessage := strings.SplitN(responseData.Text, " ", 2)
 	if chatMessage[0] == "weatherbot" {
 		message := getWeatherString(chatMessage[1])
 		postToChat(message)
@@ -88,6 +88,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	log.Println("Starting")
 	var err error
 	client, err = maps.NewClient(maps.WithAPIKey(os.Getenv("GMAPS_KEY")))
 	if err != nil {
