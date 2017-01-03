@@ -1,6 +1,31 @@
 {
 	"comment": "",
 	"ignore": "test",
-	"package": [],
+	"package": [
+		{
+			"checksumSHA1": "9jjO5GjLa0XF/nfWihF02RoH4qc=",
+			"path": "golang.org/x/net/context",
+			"revision": "8fd7f25955530b92e73e9e1932a41b522b22ccd9",
+			"revisionTime": "2016-12-29T20:13:24Z"
+		},
+		{
+			"checksumSHA1": "WHc3uByvGaMcnSoI21fhzYgbOgg=",
+			"path": "golang.org/x/net/context/ctxhttp",
+			"revision": "8fd7f25955530b92e73e9e1932a41b522b22ccd9",
+			"revisionTime": "2016-12-29T20:13:24Z"
+		},
+		{
+			"checksumSHA1": "p7UlHQWj3qLEk3HZTfWNPwOrDWM=",
+			"path": "googlemaps.github.io/maps",
+			"revision": "a2e462ca7b1c6871c1edb98414ffbb7d631a6b6a",
+			"revisionTime": "2016-12-01T00:53:33Z"
+		},
+		{
+			"checksumSHA1": "T47E4DD/+UCGq0rAc70yGCEWJ0w=",
+			"path": "googlemaps.github.io/maps/internal",
+			"revision": "a2e462ca7b1c6871c1edb98414ffbb7d631a6b6a",
+			"revisionTime": "2016-12-01T00:53:33Z"
+		}
+	],
 	"rootPath": "github.com/ProPorygon/weather-gobot"
 }
