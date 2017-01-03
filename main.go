@@ -2,11 +2,15 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"strings"
+
+	"googlemaps.github.io/maps"
 )
 
 type Weather struct {
@@ -18,9 +22,29 @@ type CurWeather struct {
 	Temperature float64
 }
 
-func getWeatherString() string {
-	url := "https://api.darksky.net/forecast/" + os.Getenv("DARKSKY_KEY") + "/40.1164,-88.2434"
-	log.Println(url)
+type CallbackMessage struct {
+	Text string
+}
+
+//G maps client
+var client *maps.Client
+
+func getWeatherString(location string) string {
+	request := &maps.GeocodingRequest{
+		Address: location,
+	}
+
+	resp, err := client.Geocode(context.Background(), request)
+	if err != nil {
+		log.Println(err.Error())
+		return "Location not found"
+	}
+
+	lat := strconv.FormatFloat(resp[0].Geometry.Location.Lat, 'f', 4, 64)
+	lon := strconv.FormatFloat(resp[0].Geometry.Location.Lng, 'f', 4, 64)
+	city := resp[0].AddressComponents[0].ShortName
+
+	url := "https://api.darksky.net/forecast/" + os.Getenv("DARKSKY_KEY") + "/" + lat + "," + lon
 	res, err := http.Get(url)
 	if err != nil {
 		log.Println(err.Error())
@@ -39,7 +63,7 @@ func getWeatherString() string {
 	}
 	summary := weather.Currently.Summary
 	temperature := weather.Currently.Temperature
-	response := "The current weather is " + summary + ", with a temperature of " + strconv.FormatFloat(temperature, 'f', 2, 32)
+	response := "The current weather in " + city + " is " + summary + ", with a temperature of " + strconv.FormatFloat(temperature, 'f', 2, 32)
 	return response
 }
 
@@ -54,15 +78,21 @@ func postToChat(message string) {
 }
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	var responseData map[string]interface{}
+	var responseData CallbackMessage
 	json.NewDecoder(r.Body).Decode(&responseData)
-	if responseData["text"] == "weatherbot" {
-		message := getWeatherString()
+	chatMessage := strings.Split(responseData.Text, " ")
+	if chatMessage[0] == "weatherbot" {
+		message := getWeatherString(chatMessage[1])
 		postToChat(message)
 	}
 }
 
 func main() {
+	var err error
+	client, err = maps.NewClient(maps.WithAPIKey(os.Getenv("GMAPS_KEY")))
+	if err != nil {
+		log.Println(err.Error())
+	}
 	http.HandleFunc("/", handler)
 	http.ListenAndServe(":"+os.Getenv("PORT"), nil)
 }
